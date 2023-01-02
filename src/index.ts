@@ -1,5 +1,14 @@
 "use strict";
 
-const name: string = "mohamed";
+import { listenHttp } from "./utils/http";
+import { createMailerTransport } from "./utils/mail";
+import { validateEnvironmentVariables } from "./utils/startup";
 
-console.log(name);
+async function run() {
+  validateEnvironmentVariables();
+  createMailerTransport();
+
+  listenHttp();
+}
+
+run();
