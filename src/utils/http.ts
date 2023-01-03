@@ -1,8 +1,10 @@
 import { createServer, IncomingMessage } from "http";
 import Joi from "joi";
 import { sendMail } from "./mail";
+import { validateBody } from "./misc";
 
 const server = createServer(async (req, res) => {
+  // accept / and respond with status 200 and ok for testing
   if (req.method !== "POST" || req.url !== "/send-mail") {
     res.writeHead(404, { "content-type": "application/json" });
     return res.end(JSON.stringify({ error: "404 not found" }));
@@ -33,17 +35,6 @@ async function parseBody(req: IncomingMessage) {
   } catch (err) {
     return {};
   }
-}
-
-function validateBody(body: any) {
-  const schema = Joi.object({
-    to: Joi.string().email().required().lowercase().trim(),
-    subject: Joi.string().trim(),
-    text: Joi.string().trim(),
-    html: Joi.string().trim(),
-  }).or("text", "html");
-
-  return schema.validate(body);
 }
 
 export function listenHttp() {

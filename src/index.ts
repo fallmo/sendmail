@@ -2,6 +2,7 @@
 
 import { listenHttp } from "./utils/http";
 import { createMailerTransport } from "./utils/mail";
+import { listenRabbitMQ } from "./utils/rabbitmq";
 import { validateEnvironmentVariables } from "./utils/startup";
 
 async function run() {
@@ -9,6 +10,7 @@ async function run() {
   createMailerTransport();
 
   listenHttp();
+  listenRabbitMQ();
 }
 
 run();

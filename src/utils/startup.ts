@@ -1,5 +1,5 @@
 export function validateEnvironmentVariables() {
-  const requiredVars = ["SMTP_HOST", "SMTP_USERNAME", "SMTP_PASSWORD", "SMTP_PORT", "SMTP_TLS"];
+  const requiredVars = ["SMTP_HOST", "SMTP_USERNAME", "SMTP_PASSWORD", "SMTP_PORT", "SMTP_TLS", "RABBITMQ_HOST"];
 
   for (const key of requiredVars) {
     const val = process.env[key]?.trim();
