@@ -57,8 +57,8 @@ function handleMessage(msg: ConsumeMessage | null) {
     })
     .then(success => {
       if (!success) {
-        // infinite loop of failure
         channel.nack(msg, undefined, true);
+        process.exit(1);
         return;
       } else return channel.ack(msg);
     });
