@@ -4,7 +4,10 @@ import { sendMail } from "./mail";
 import { validateBody } from "./misc";
 
 const server = createServer(async (req, res) => {
-  // accept / and respond with status 200 and ok for testing
+  if (req.method === "GET" && ["/healthz", "/"].includes(req.url!)) {
+    return res.writeHead(200).end();
+  }
+
   if (req.method !== "POST" || req.url !== "/send-mail") {
     res.writeHead(404, { "content-type": "application/json" });
     return res.end(JSON.stringify({ error: "404 not found" }));
