@@ -4,14 +4,38 @@ import { stringToBool, wait } from "./misc";
 let transporter: Transporter;
 
 export function createMailerTransport() {
+  const user = process.env.SMTP_USERNAME!;
+  const serviceClient = process.env.SMTP_SERVICE_CLIENT;
+  const privateKey = process.env.SMTP_PRIVATE_KEY;
+  const pass = process.env.SMTP_PASSWORD;
+
+  let auth: any;
+
+  if (!pass && (!serviceClient || !privateKey)) {
+    throw new Error(
+      `Either provide SMTP_PASSWORD or SMTP_SERVICE_CLIENT and SMTP_PRIVATE_KEY`
+    );
+  }
+
+  if (serviceClient && privateKey) {
+    auth = {
+      user,
+      type: "OAuth2",
+      serviceClient: serviceClient,
+      privateKey: privateKey,
+    };
+  } else if (pass) {
+    auth = {
+      user,
+      pass,
+    };
+  }
+
   transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST!,
     port: +process.env.SMTP_PORT!,
     secure: stringToBool(process.env.SMTP_TLS),
-    auth: {
-      user: process.env.SMTP_USERNAME!,
-      pass: process.env.SMTP_PASSWORD!,
-    },
+    auth,
   });
 }
 
@@ -30,7 +54,9 @@ export async function sendMail(
       html: args.html,
     });
 
-    console.log(`Mail Sent '${args.subject}' => ${args.to} (${info.messageId})`);
+    console.log(
+      `Mail Sent '${args.subject}' => ${args.to} (${info.messageId})`
+    );
     return true;
   } catch (err) {
     console.log(err);
