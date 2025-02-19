@@ -1,4 +1,4 @@
-FROM node:16 AS build
+FROM docker.io/s390x/node:16 AS build
 
 WORKDIR /code
 
@@ -11,7 +11,7 @@ COPY ./src ./src
 RUN npm run build
 
 
-FROM node:16-slim
+FROM docker.io/s390x/node:16-slim
 
 WORKDIR /app
 
